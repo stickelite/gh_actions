@@ -1,0 +1,28 @@
+name: CI
+on: [push]
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 17.x ] 
+    steps:
+      - uses: actions/checkout@v3
+      - name: Starting a Node.js ${{ matrix.node-version }}
+        #установка nodejs
+        uses: actions/setup-node@v3
+        with:
+        #конкретной версии
+          node-version: ${{ matrix.node-version }}
+      - name: Установим зависимости
+        run: npm install modules
+        #все следующие скрипты есть в package.json
+      - name: Соберем приложение Storybook
+        run: npm run build:storybook
+      - name: Unit test
+        run: npm run test:unit
+      - name: e2e test
+        run: npm run test:e2e
+      - name: lint code
+        run: npm run lint
+        
